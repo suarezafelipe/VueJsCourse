@@ -1,0 +1,22 @@
+<script src="https://unpkg.com/vue@2.2.6"></script>
+
+<div id="app">
+    <!--v-if: realmente quita el elemento del DOM-->
+    <p v-if="show"> Hola mundo true <span>Hola desde span</span> </p>
+    <p v-else>String dentro del else</p>
+    <!--v-show: usa el display:none-->
+    <div v-show="show">
+        <h1>Display</h1>
+        <p>none</p>
+    </div>    
+    <button @click="show = !show">Switch</button>
+</div>
+
+<script>
+    new Vue({
+    el: '#app',
+    data: {
+        show: true
+    }    
+});
+</script>

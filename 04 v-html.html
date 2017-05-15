@@ -1,0 +1,19 @@
+<script src="https://unpkg.com/vue@2.2.6"></script>
+
+<div id="app">    
+    <h1>{{ title }}</h1>
+    <a v-bind:href="link">listaencasa</a></p>
+    <hr>
+    <p v-html="finishedLink"></p>
+</div>
+
+<script>
+    new Vue({
+    el: '#app',
+    data: {
+        title: 'Hello World!',
+        link: 'https://listaencasa.com',
+        finishedLink: '<a href="https://listaencasa.com">LEC</a>'
+    }
+});
+</script>

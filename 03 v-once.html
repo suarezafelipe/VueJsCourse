@@ -1,0 +1,22 @@
+<script src="https://unpkg.com/vue@2.2.6"></script>
+
+<div id="app">    
+    <h1 v-once>{{ title }}</h1>
+    <p>{{ sayHello() }} <a v-bind:href="link">listaencasa</a></p>
+</div>
+
+<script>
+    new Vue({
+    el: '#app',
+    data: {
+        title: 'Hello World!',
+        link: 'https://listaencasa.com'
+    },
+    methods: {
+        sayHello: function() {
+            this.title = 'hola cambiado'
+            return this.title;
+        }
+    }
+});
+</script>
