@@ -27,23 +27,23 @@
         </div>
     </section>
     <section class="row controls">
-        <div class="small-12 columns">
-            <button id="start-game">START NEW GAME</button>
+        <div class="small-12 columns" v-show="!newGame">
+            <button id="start-game" @click="newGame = !newGame">START NEW GAME</button>
         </div>
     </section>
-    <section class="row controls">
+    <section class="row controls" v-show="newGame">
         <div class="small-12 columns">
-            <button id="attack">ATTACK</button>
+            <button id="attack" @click="normalAttack()">ATTACK</button>
             <button id="special-attack">SPECIAL ATTACK</button>
             <button id="heal">HEAL</button>
-            <button id="give-up">GIVE UP</button>
+            <button id="give-up" @click="newGame = !newGame">GIVE UP</button>
         </div>
     </section>
     <section class="row log">
         <div class="small-12 columns">
-            <ul>
-                <li>
-
+            <ul v-for="value in gameLog">
+                <li v-for="item in value">
+                    {{ item }}                    
                 </li>
             </ul>
         </div>
@@ -57,13 +57,29 @@
 <script>
     new Vue({
     el: '#app',
-    data: {
-        title: 'Hello World!'
+    data: {        
+        newGame: false,        
+        gameLog: [{
+            player: "",
+            type: "",
+            amount: ""
+        }]       
     },
     methods: {
-        changeTitle: function(event){
-            this.title = event.target.value;
+        normalAttack: function(){
+            this.attack('player', 1)
+            this.attack('monster', 1)            
+        },
+        specialAttack: function(){
+            attack('player', 3)
+            attack('monster', 3)            
+        },
+        attack: function(player, multiplier) {
+            this.gameLog.player = player
+            this.gameLog.type = "normalAttack"
+            this.gameLog.amount = Math.random()*10*multiplier                      
         }
     }
 });
+
 </script>
