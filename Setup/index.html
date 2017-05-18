@@ -13,7 +13,6 @@
             <h1 class="text-center">YOU</h1>
             <div class="healthbar">
                 <div class="healthbar text-center" style="background-color: green; margin: 0; color: white;">
-
                 </div>
             </div>
         </div>
@@ -34,15 +33,15 @@
     <section class="row controls" v-show="newGame">
         <div class="small-12 columns">
             <button id="attack" @click="normalAttack()">ATTACK</button>
-            <button id="special-attack">SPECIAL ATTACK</button>
+            <button id="special-attack" @click="specialAttack()">SPECIAL ATTACK</button>
             <button id="heal">HEAL</button>
             <button id="give-up" @click="newGame = !newGame">GIVE UP</button>
         </div>
     </section>
     <section class="row log">
-        <div class="small-12 columns">
-            <ul v-for="value in gameLog">
-                <li v-for="item in value">
+        <div class="small-12 columns">            
+            <ul>
+                <li v-for="item in gameLog">
                     {{ item }}                    
                 </li>
             </ul>
@@ -58,12 +57,8 @@
     new Vue({
     el: '#app',
     data: {        
-        newGame: false,        
-        gameLog: [{
-            player: "",
-            type: "",
-            amount: ""
-        }]       
+        newGame: false, 
+        gameLog: [],               
     },
     methods: {
         normalAttack: function(){
@@ -71,13 +66,15 @@
             this.attack('monster', 1)            
         },
         specialAttack: function(){
-            attack('player', 3)
-            attack('monster', 3)            
+            this.attack('player', 2)
+            this.attack('monster', 2)            
         },
-        attack: function(player, multiplier) {
-            this.gameLog.player = player
-            this.gameLog.type = "normalAttack"
-            this.gameLog.amount = Math.random()*10*multiplier                      
+        attack: function(ply, multiplier) {   
+            //splie is used to reverse the order of pushing items into the array                                 
+            this.gameLog.splice(0,0,{
+                player: ply,                
+                amount: Math.round(Math.random()*10*multiplier)                       
+            })
         }
     }
 });
