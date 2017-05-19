@@ -34,7 +34,7 @@
         <div class="small-12 columns">
             <button id="attack" @click="normalAttack()">ATTACK</button>
             <button id="special-attack" @click="specialAttack()">SPECIAL ATTACK</button>
-            <button id="heal">HEAL</button>
+            <button id="heal" @click="heal()">HEAL</button>
             <button id="give-up" @click="newGame = !newGame">GIVE UP</button>
         </div>
     </section>
@@ -42,7 +42,22 @@
         <div class="small-12 columns">            
             <ul>
                 <li v-for="item in gameLog">
-                    {{ item }}                    
+                    <template v-if="item.player == 'player'">
+                        <div class="player-turn">                            
+                            <div v-if="item.amount < 0">
+                                Player hits Monster for {{ item.amount * -1 }} 
+                            </div>
+                            <div v-else>
+                                Player heals for {{ item.amount }}
+                            </div>                            
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="monster-turn">
+                            Monster hits Plater for {{ item.amount * -1 }}
+                        </div>
+                    </template>
+                    
                 </li>
             </ul>
         </div>
@@ -68,13 +83,20 @@
         specialAttack: function(){
             this.attack('player', 2)
             this.attack('monster', 2)            
-        },
+        },        
         attack: function(ply, multiplier) {   
-            //splie is used to reverse the order of pushing items into the array                                 
+            //splice is used to reverse the order of pushing items into the array                                 
             this.gameLog.splice(0,0,{
                 player: ply,                
-                amount: Math.round(Math.random()*10*multiplier)                       
+                amount: Math.round(Math.random()*10*multiplier*-1)                       
             })
+        },
+        heal: function(){
+            this.gameLog.splice(0,0,{
+                player: 'player',                
+                amount: Math.round(Math.random()*10)                       
+            })
+            this.attack('monster', 1)            
         }
     }
 });
