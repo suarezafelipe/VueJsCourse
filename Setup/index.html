@@ -12,22 +12,23 @@
         <div class="small-6 columns">
             <h1 class="text-center">YOU</h1>
             <div class="healthbar">
-                <div class="healthbar text-center" style="background-color: green; margin: 0; color: white;">
+                <div class="healthbar text-center" :style="playerHealthBar">     
+                    {{ playerWidth/3 }}               
                 </div>
             </div>
         </div>
         <div class="small-6 columns">
             <h1 class="text-center">MONSTER</h1>
             <div class="healthbar">
-                <div class="healthbar text-center" style="background-color: green; margin: 0; color: white;">
-
+                <div class="healthbar text-center" :style="monsterHealthBar">
+                    {{ monsterWidth/3 }}
                 </div>
             </div>
         </div>
     </section>
-    <section class="row controls">
-        <div class="small-12 columns" v-show="!newGame">
-            <button id="start-game" @click="newGame = !newGame">START NEW GAME</button>
+    <section class="row controls" v-show="!newGame">
+        <div class="small-12 columns" >
+            <button id="start-game" @click="startNewGame()">START NEW GAME</button>
         </div>
     </section>
     <section class="row controls" v-show="newGame">
@@ -54,7 +55,7 @@
                     </template>
                     <template v-else>
                         <div class="monster-turn">
-                            Monster hits Plater for {{ item.amount * -1 }}
+                            Monster hits Player for {{ item.amount * -1 }}
                         </div>
                     </template>
                     
@@ -66,16 +67,36 @@
 </body>
 </html>
 
-
-
 <script>
     new Vue({
     el: '#app',
     data: {        
         newGame: false, 
-        gameLog: [],               
+        gameLog: [],  
+        playerWidth: 300,                
+        monsterWidth: 300,                
+        playerHealthBar: {          
+          width: '300px',
+          backgroundColor: 'green',
+          margin: '0',
+          color: 'white'          
+        },
+        monsterHealthBar: {
+          width: '300px',
+          backgroundColor: 'green',
+          margin: 0,
+          color: 'white'
+        }
     },
     methods: {
+        startNewGame: function(){
+            this.newGame = !this.newGame
+            this.monsterWidth = 300
+            this.playerWidth = 300
+            this.playerHealthBar.width = this.playerWidth + 'px'  
+            this.monsterHealthBar.width = this.monsterWidth + 'px'
+            this.gameLog = []
+        },
         normalAttack: function(){
             this.attack('player', 1)
             this.attack('monster', 1)            
@@ -85,18 +106,42 @@
             this.attack('monster', 2)            
         },        
         attack: function(ply, multiplier) {   
+            var dmgDealt = Math.round(Math.random()*10*multiplier*-1)                       
             //splice is used to reverse the order of pushing items into the array                                 
             this.gameLog.splice(0,0,{
                 player: ply,                
-                amount: Math.round(Math.random()*10*multiplier*-1)                       
+                amount: dmgDealt
             })
+            if (ply=='monster'){
+                this.updatePlayerBar(dmgDealt)
+            } else {
+                this.updateMonsterBar(dmgDealt)
+            }            
         },
         heal: function(){
+            var dmgHealed = Math.round(Math.random()*10*1.5)                       
             this.gameLog.splice(0,0,{
                 player: 'player',                
-                amount: Math.round(Math.random()*10)                       
+                amount: dmgHealed          
             })
-            this.attack('monster', 1)            
+            this.updatePlayerBar(dmgHealed)            
+            this.attack('monster', 1)  
+        },
+        updatePlayerBar: function(amount){
+            this.playerWidth += amount*3
+            this.playerHealthBar.width = this.playerWidth + 'px' 
+            if (this.playerWidth <= 0){
+                alert("You lose!")
+                this.newGame = !this.newGame
+            }      
+        },
+        updateMonsterBar: function(amount){
+            this.monsterWidth += amount*3
+            this.monsterHealthBar.width = this.monsterWidth + 'px'      
+            if (this.monsterWidth <= 0){
+                alert("You WIN!")
+                this.newGame = !this.newGame
+            }
         }
     }
 });
